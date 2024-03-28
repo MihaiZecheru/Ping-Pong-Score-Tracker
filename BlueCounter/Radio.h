@@ -55,7 +55,7 @@ RadioMessage RadioMessageToChar(RadioMessage rm)
 }
 
 /**
- * Send data over the radio
+ * Send a RadioMessage over the radio, which is just one char
  *
  * @param msg_char The message to send
  */
