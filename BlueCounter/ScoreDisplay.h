@@ -91,6 +91,7 @@ const uint8_t SEVSEG_L = 0x38;
 */
 void ShowWin(TM1637* _score_display)
 {
+  // NOTE: I added a custom function, setCustomChar, to the TM1637 library. It is not a part of the original library
   _score_display->setCustomChar(0, SEVSEG_u);
   _score_display->setCustomChar(1, SEVSEG_u);
 }
@@ -100,6 +101,7 @@ void ShowWin(TM1637* _score_display)
 */
 void ShowLoss(TM1637* _score_display)
 {
+  // NOTE: I added a custom function, setCustomChar, to the TM1637 library. It is not a part of the original library
   _score_display->setCustomChar(0, SEVSEG_L);
 }
 
