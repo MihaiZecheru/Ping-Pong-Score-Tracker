@@ -26,7 +26,7 @@ enum RadioMessage
   toggle_score_mode = 101, // e
   start_new_game = 102, // f
   
-  invalid = 0 // NUL
+  invalid_or_none = 0 // NUL
 };
 
 /**
@@ -42,7 +42,7 @@ RadioMessage GetRadioMessageFromChar(char c)
         case 'd': return RadioMessage::decrement_red_score;
         case 'e': return RadioMessage::toggle_score_mode;
         case 'f': return RadioMessage::start_new_game;
-        default:  return RadioMessage::invalid;
+        default:  return RadioMessage::invalid_or_none;
     }
 }
 
@@ -61,6 +61,7 @@ RadioMessage RadioMessageToChar(RadioMessage rm)
  */
 void radio_send(RF24* _radio, RadioMessage msg)
 {
+  _radio->stopListening();
   _radio->write(&RadioMessageToChar(msg), sizeof(char));
 }
 
