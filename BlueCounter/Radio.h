@@ -32,7 +32,7 @@ enum RadioMessage
 /**
  * Convert a character (a - f) into a member of the RadioMessage enum
  */
-RadioMessage RadioMessageFromChar(char c)
+RadioMessage CharToRadioMessage(char c)
 {
   switch(c)
     {
@@ -82,6 +82,19 @@ void send_toggle_score_mode_message(RF24* _radio)
   radio_send(_radio, RadioMessage::toggle_score_mode);
 }
 
-
+/**
+ * Get's an incoming radio transmission if there is one.
+ * 
+ * The radio is by default in the listening state, and switches only to send information when a button is pressed
+ */
+RadioMessage GetRadioTransmission(RF24* _radio)
+{
+  if (!_radio->available()) return RadioMessage::invalid_or_none;
+  
+  char transmission;
+  _radio->read(&transmission, _radio->getPayloadSize());
+  
+  return CharToRadioMessage(transmission);
+}
 
 #endif
