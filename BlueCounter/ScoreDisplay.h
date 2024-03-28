@@ -33,9 +33,9 @@ ScoreMode SCORE_MODE = ScoreMode::ToEleven; // Game to 11 is the default
 void ToggleScoreMode()
 {
   if (SCORE_MODE == ScoreMode::ToEleven)
-    SCORE_MODE = ScoreMode::ToTwentyOne;
-  else
-    SCORE_MODE = ScoreMode::ToEleven;
+    SCORE_MODE = ScoreMode::ToTwentyOne; // Game will now be played to 21, a 10pt extension from the ToEleven game
+  else if (SCORE_MODE == ScoreMode::ToTwentyOne && max(blue_score, red_score) < 11) // Check if any of the players have surpassed 11pts before switching to an 11pt game
+    SCORE_MODE = ScoreMode::ToEleven; // Game will now be played to 11, a 10pt reduction from the ToTwentyOne game
 }
 
 /**
