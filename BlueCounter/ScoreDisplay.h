@@ -23,7 +23,7 @@ enum ScoreMode
 {
   ToEleven = 1,
   ToTwentyOne = 2
-}
+};
 
 ScoreMode SCORE_MODE = ScoreMode::ToEleven; // Game to 11 is the default
 
@@ -70,6 +70,14 @@ void DisplayScores(TM1637* _score_display, uint8_t score_blue, uint8_t score_red
   
   _score_display->display(2, floor(score_red / 10)); // Get the "ones" digit
   _score_display->display(3, score_red % 10); // Get the "tens" digit
+}
+
+bool HasWon(uint8_t player_score)
+{
+  // Use >= just in case of some bug possibly taking place
+  if (SCORE_MODE == ScoreMode::ToEleven && player_score >= 11) return true;
+  else if (SCORE_MODE == Scoremode::ToTwentyOne && player_score >= 21) return true;
+  return false;
 }
 
 #endif
