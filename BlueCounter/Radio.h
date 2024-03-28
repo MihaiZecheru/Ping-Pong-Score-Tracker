@@ -32,7 +32,7 @@ enum RadioMessage
 /**
  * Convert a character (a - f) into a member of the RadioMessage enum
  */
-RadioMessage GetRadioMessageFromChar(char c)
+RadioMessage RadioMessageFromChar(char c)
 {
   switch(c)
     {
@@ -49,7 +49,7 @@ RadioMessage GetRadioMessageFromChar(char c)
 /**
  * Convert a member of the RadioMessage enum to it's character form (a - f)
  */
-RadioMessage RadioMessageToChar(RadioMessage rm)
+char RadioMessageToChar(RadioMessage rm)
 {
   return (char)rm;
 }
@@ -62,7 +62,8 @@ RadioMessage RadioMessageToChar(RadioMessage rm)
 void radio_send(RF24* _radio, RadioMessage msg)
 {
   _radio->stopListening();
-  _radio->write(&RadioMessageToChar(msg), sizeof(char));
+  _radio->write(RadioMessageToChar(msg), sizeof(char));
+  _radio->startListening();
 }
 
 /**
@@ -80,5 +81,7 @@ void send_toggle_score_mode_message(RF24* _radio)
 {
   radio_send(_radio, RadioMessage::toggle_score_mode);
 }
+
+
 
 #endif
