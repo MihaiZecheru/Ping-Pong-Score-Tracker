@@ -1,7 +1,8 @@
 #ifndef SHARED_H
 #define SHARED_H
 
-const byte RADIO_ADDRESS[6] = "00001";
+const byte BLUE_RADIO_HOME_ADDRESS[6] = "00001";
+const byte RED_RADIO_HOME_ADDRESS[6] = "00002";
 
 /**
  * The various messages to be transmitted and received by radio.

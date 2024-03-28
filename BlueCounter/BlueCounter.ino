@@ -41,7 +41,9 @@ void setup()
   InitScoreDisplay(&score_display);
   
   radio.begin(); // TODO: make radio able to both transmit AND receive
-  radio.openWritingPipe(RADIO_ADDRESS);
+  radio.setPayloadSize(sizeof(char));
+  radio.openWritingPipe(RED_RADIO_HOME_ADDRESS);
+  radio.openReadingPipe(1, BLUE_RADIO_HOME_ADDRESS);
   radio.setPALevel(RF24_PA_MIN);
   radio.stopListening();
 }
