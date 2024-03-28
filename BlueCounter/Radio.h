@@ -1,7 +1,14 @@
 #ifndef SHARED_H
 #define SHARED_H
 
+/**
+ * The address the blue red will be listening on
+ */
 const byte BLUE_RADIO_HOME_ADDRESS[6] = "00001";
+
+/**
+ * The address the red radio will be listening on
+ */
 const byte RED_RADIO_HOME_ADDRESS[6] = "00002";
 
 /**
