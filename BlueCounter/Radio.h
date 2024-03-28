@@ -61,8 +61,7 @@ RadioMessage RadioMessageToChar(RadioMessage rm)
  */
 void radio_send(RF24* _radio, RadioMessage msg)
 {
-  const char msg_formatted[1] = { RadioMessageToChar(msg) };
-  _radio->write(&msg_formatted[1], sizeof(char));
+  _radio->write(&RadioMessageToChar(msg), sizeof(char));
 }
 
 /**
