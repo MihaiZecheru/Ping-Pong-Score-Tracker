@@ -2,9 +2,10 @@
 
 TM1637 score_display(4, 5); // CLK - 4, DIO = 5
 
-#include "Communication.h"
-#include "Button.h"
-#include "ScoreDisplay.h"
+//#include "Communication.h"
+//#include "Button.h"
+//#include "ScoreDisplay.h"
+#include <ping_pong_score_tracker_library.h>
 
 #define BLUE_BTN_PIN 3
 #define WHITE_BTN_PIN 2
@@ -14,7 +15,7 @@ Button white_btn(WHITE_BTN_PIN);
 
 void setup()
 {
-  // Initialize the score_display and set brightness to constant from ScoreDisplay.h
+  // Initialize the score_display and set brightness to constant from ping_pong_score_tracker_library/ScoreDisplay.h
   InitScoreDisplay(&score_display);
   Serial.begin(9600);
 

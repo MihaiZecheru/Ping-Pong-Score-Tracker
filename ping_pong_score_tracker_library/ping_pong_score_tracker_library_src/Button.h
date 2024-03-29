@@ -19,6 +19,9 @@ public:
     pinMode(pin, INPUT);
   }
 
+  /**
+   * Is the button on or off?
+   */
   ButtonState GetState()
   {
     return (digitalRead(pin) == HIGH) ? ButtonState::ON : ButtonState::OFF;
