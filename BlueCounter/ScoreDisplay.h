@@ -4,32 +4,52 @@
 #include <TM1637.h>
 
 /**
+   The brightness of the score_display. Integer between 0 - 7
+*/
+#define SCORE_DISPLAY_BRIGHTNESS 5
+
+/**
    Blue and Red players' scores
 */
 uint8_t blue_score = 0;
 uint8_t red_score = 0;
 
-/**
- * @param _ Placeholder for use in the CheckForPressOrHold function
- */
-void IncrementBlueScore(void* _)
+void BlinkScores(TM1637* _score_display, uint8_t blinks = 6);
+
+void IncrementBlueScore()
 {
   blue_score++;
 }
 
-void DecrementBlueScore(void* _)
+void DecrementBlueScore()
 {
-  blue_score--;
+  if (blue_score != 0)
+  {
+    blue_score--;
+    return;
+  }
+  else
+  {
+    BlinkScores(&score_display, 1);
+  }
 }
 
-void IncrementRedScore(void* _)
+void IncrementRedScore()
 {
   red_score++;
 }
 
-void DecrementRedScore(void* _)
+void DecrementRedScore()
 {
-  red_score--;
+  if (red_score != 0)
+  {
+    red_score--;
+    return;
+  }
+  else
+  {
+    BlinkScores(&score_display, 1);
+  }
 }
 
 /**
@@ -80,14 +100,6 @@ void StartNewGame(TM1637* _score_display)
 {
   blue_score = 0;
   red_score = 0;
-  
-  delay(500);
-  ShowScoreMode(_score_display);
-}
-
-void StartNewGame_void_cast(void* _score_display)
-{
-  StartNewGame(reinterpret_cast<TM1637*>(_score_display));
 }
 
 /**
@@ -107,16 +119,6 @@ void ToggleScoreMode(TM1637* _score_display)
 
   ShowScoreMode(_score_display);
 }
-
-void ToggleScoreMode_void_cast(void* _score_display)
-{
-  ToggleScoreMode(reinterpret_cast<TM1637*>(_score_display));
-}
-
-/**
-   The brightness of the score_display. Integer between 0 - 7
-*/
-const uint8_t SCORE_DISPLAY_BRIGHTNESS = 5;
 
 /**
    Initialize the given _score_display module and set it's brightness to the SCORE_DISPLAY_BRIGHTNESS constant
@@ -159,11 +161,13 @@ bool HasWon(uint8_t player_score)
 }
 
 /**
-   Show to the players that someone has won by displaying a double 'u' for 3.75 seconds, blinking six times
+   Blink the score <blinks> amount of times. Each blink is 625ms. Default blinks is 6, meaning 3.75 seconds
+
+   @param blinks The amount of times to blink
 */
-void BlinkScore(TM1637* _score_display)
+void BlinkScores(TM1637* _score_display, uint8_t blinks = 6)
 {
-  for (int i = 0; i < 6; i++)
+  for (int i = 0; i < blinks; i++)
   {
     _score_display->point(false); // turn semicolon off to completely clear display
     uint16_t start = millis();
@@ -180,10 +184,10 @@ void BlinkScore(TM1637* _score_display)
  */
 void HandlePossibleWin(TM1637* _score_display)
 {
-  if (!HasWon(blue_score) || !HasWon(red_score)) return;
+  if (!HasWon(blue_score) && !HasWon(red_score)) return;
 
   // Player has won
-  BlinkScore(_score_display);
+  BlinkScores(_score_display, 6);
   StartNewGame(_score_display);
 }
 
