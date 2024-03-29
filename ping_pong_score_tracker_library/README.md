@@ -5,4 +5,5 @@ which both require these libraries
 
 There was no point in copying the code to both folders so I made a library 
 
-Note: this library must be in Arduino/libraries to work.
+Note: the code seen here in GitHub is just a copy of the library. the real location is in Arduino/libraries.
+      it must be at that location to work
