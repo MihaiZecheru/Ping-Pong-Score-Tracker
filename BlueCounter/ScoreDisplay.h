@@ -9,11 +9,27 @@
 uint8_t blue_score = 0;
 uint8_t red_score = 0;
 
-void StartNewGame()
+/**
+ * @param _ Placeholder for use in the CheckForPressOrHold function
+ */
+void IncrementBlueScore(void* _)
 {
-  blue_score = 0;
-  red_score = 0;
-  // Display will be automatically refreshed in loop by DisplayScores func
+  blue_score++;
+}
+
+void DecrementBlueScore(void* _)
+{
+  blue_score--;
+}
+
+void IncrementRedScore(void* _)
+{
+  red_score++;
+}
+
+void DecrementRedScore(void* _)
+{
+  red_score--;
 }
 
 /**
@@ -27,15 +43,74 @@ enum ScoreMode
 
 ScoreMode SCORE_MODE = ScoreMode::ToEleven; // Game to 11 is the default
 
+void ShowScoreMode(TM1637* _score_display)
+{
+  _score_display->point(false); // turn semicolon off to completely clear display
+  for (int i = 0; i < 6; i++)
+  {
+    
+    uint16_t start = millis();
+    while (millis() - start < 125) _score_display->clearDisplay();
+    
+    start = millis();
+    while (millis() - start < 500)
+    {
+      // Show what the game is being played to in the middle of the score display
+      if (SCORE_MODE == ScoreMode::ToEleven)
+      {
+        // Show the number 11 in the middle of the score display
+        _score_display->display(1, 1);
+        _score_display->display(2, 1);
+      }
+      else
+      {
+        // Show the number 21 in the middle of the score display
+        _score_display->display(1, 2);
+      _score_display->display(2, 1);
+      }
+    }
+  }
+  _score_display->point(true); // turn semicolon on again
+}
+
+/**
+ * Start a new game. Reset the scores. Show the current score mode.
+ */
+void StartNewGame(TM1637* _score_display)
+{
+  blue_score = 0;
+  red_score = 0;
+  
+  delay(500);
+  ShowScoreMode(_score_display);
+}
+
+void StartNewGame_void_cast(void* _score_display)
+{
+  StartNewGame(reinterpret_cast<TM1637*>(_score_display));
+}
+
 /**
    Toggle what score the game is played to, either to 11 or to 21
 */
-void ToggleScoreMode()
+void ToggleScoreMode(TM1637* _score_display)
 {
   if (SCORE_MODE == ScoreMode::ToEleven)
+  {
     SCORE_MODE = ScoreMode::ToTwentyOne; // Game will now be played to 21, a 10pt extension from the ToEleven game
-  else if (SCORE_MODE == ScoreMode::ToTwentyOne && max(blue_score, red_score) < 11) // Check if any of the players have surpassed 11pts before switching to an 11pt game
+  }
+  else if (SCORE_MODE == ScoreMode::ToTwentyOne && max(blue_score, red_score) < 11)
+  {
+    // Check if any of the players have surpassed 11pts before switching to an 11pt game
     SCORE_MODE = ScoreMode::ToEleven; // Game will now be played to 11, a 10pt reduction from the ToTwentyOne game
+  }
+
+  ShowScoreMode(_score_display);
+}
+
+void ToggleScoreMode_void_cast(void* _score_display)
+{
+  ToggleScoreMode(reinterpret_cast<TM1637*>(_score_display));
 }
 
 /**
@@ -57,19 +132,19 @@ void InitScoreDisplay(TM1637* _score_display)
 
    Note: this function must be called in a loop
 */
-void DisplayScores(TM1637* _score_display, uint8_t score_blue, uint8_t score_red)
+void DisplayScores(TM1637* _score_display, uint8_t _blue_score, uint8_t _red_score)
 {
   /**
      If the score is 6, floor(6 / 10) is 0 (the first digit, i.e. the tens digit),
      and (6 % 10) is 6 (the second digit, i.e. the ones digit), giving "06"
   */
-  _score_display->display(0, floor(score_blue / 10)); // Get the "ones" digit
-  _score_display->display(1, score_blue % 10); // Get the "tens" digit
+  _score_display->display(0, floor(_blue_score / 10)); // Get the "ones" digit
+  _score_display->display(1, _blue_score % 10); // Get the "tens" digit
 
   _score_display->point(true); // Turn on the colon separator
 
-  _score_display->display(2, floor(score_red / 10)); // Get the "ones" digit
-  _score_display->display(3, score_red % 10); // Get the "tens" digit
+  _score_display->display(2, floor(_red_score / 10)); // Get the "ones" digit
+  _score_display->display(3, _red_score % 10); // Get the "tens" digit
 }
 
 /**
@@ -83,26 +158,33 @@ bool HasWon(uint8_t player_score)
   return false;
 }
 
-const uint8_t SEVSEG_u = 0x3c;
-const uint8_t SEVSEG_L = 0x38;
-
 /**
-   Show to the player that he has won by displaying a double 'u'
+   Show to the players that someone has won by displaying a double 'u' for 3.75 seconds, blinking six times
 */
-void ShowWin(TM1637* _score_display)
+void BlinkScore(TM1637* _score_display)
 {
-  // NOTE: I added a custom function, setCustomChar, to the TM1637 library. It is not a part of the original library
-  _score_display->setCustomChar(0, SEVSEG_u);
-  _score_display->setCustomChar(1, SEVSEG_u);
+  for (int i = 0; i < 6; i++)
+  {
+    _score_display->point(false); // turn semicolon off to completely clear display
+    uint16_t start = millis();
+    while (millis() - start < 125) _score_display->clearDisplay();
+    
+    start = millis();
+    _score_display->point(true); // turn semicolon on again
+    while (millis() - start < 500) DisplayScores(_score_display, blue_score, red_score);
+  }
 }
 
 /**
-   Show to the player that he has lost by displaying an 'L'
-*/
-void ShowLoss(TM1637* _score_display)
+ * Check if a player has won the game. If the have, blink the score six times then start a new game
+ */
+void HandlePossibleWin(TM1637* _score_display)
 {
-  // NOTE: I added a custom function, setCustomChar, to the TM1637 library. It is not a part of the original library
-  _score_display->setCustomChar(0, SEVSEG_L);
+  if (!HasWon(blue_score) || !HasWon(red_score)) return;
+
+  // Player has won
+  BlinkScore(_score_display);
+  StartNewGame(_score_display);
 }
 
 #endif
