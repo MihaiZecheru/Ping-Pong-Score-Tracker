@@ -100,9 +100,9 @@ void on_blue_btn_hold()
 {
 	send_decrement_blue_score_message();
 	DecrementBlueScore();
- // When the user holds the button, after two seconds a point is deducted from blue but the score doesn't refresh until he lets go
-  // because of this, the user does not know when to let go of the button until the score display refreshes, hence why its done here
-  DisplayScores(&score_display, blue_score, red_score);
+	// When the user holds the button, after two seconds a point is deducted from blue but the score doesn't refresh until he lets go
+	// because of this, the user won't know when to let go of the button until the score display refreshes, hence why the display is refreshed here
+	DisplayScores(&score_display, blue_score, red_score);
 }
 
 /**
@@ -110,7 +110,7 @@ void on_blue_btn_hold()
  */
 void send_increment_red_score_message()
 {
-  TransmitData(DataMessage::increment_red_score);
+	TransmitData(DataMessage::increment_red_score);
 }
 
 /**
@@ -118,7 +118,7 @@ void send_increment_red_score_message()
  */
 void send_decrement_red_score_message()
 {
-  TransmitData(DataMessage::decrement_red_score);
+	TransmitData(DataMessage::decrement_red_score);
 }
 
 /**
@@ -138,7 +138,7 @@ void on_red_btn_hold()
 	send_decrement_red_score_message();
 	DecrementRedScore();
   // When the user holds the button, after two seconds a point is deducted from red but the score doesn't refresh until he lets go
-  // because of this, the user does not know when to let go of the button until the score display refreshes, hence why its done here
+  // because of this, the user won't know when to let go of the button until the score display refreshes, hence why the display is refreshed here
   DisplayScores(&score_display, blue_score, red_score);
 }
 
@@ -174,6 +174,8 @@ void send_toggle_score_mode_message()
 {
 	send_start_new_game_message();
 	StartNewGame(&score_display); // TM1637 instance from main file
-}
+	// When the user holds the button, after two seconds the scores will reset but the score doesn't refresh until he lets go
+	// because of this, the user won't know when to let go of the button until the score display refreshes, hence why the display is refreshed here
+}	DisplayScores(&score_display, blue_score, red_score);
 
 #endif
