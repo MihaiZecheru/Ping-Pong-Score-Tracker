@@ -1,14 +1,16 @@
 #include <TM1637.h>
 
-TM1637 score_display(4, 5); // CLK - 4, DIO = 5
+#define CLK 10
+#define DIO 9
+#define RED_BTN_PIN 7
+#define WHITE_BTN_PIN 5
+
+TM1637 score_display(CLK, DIO);
 
 //#include "Communication.h"
 //#include "Button.h"
 //#include "ScoreDisplay.h"
 #include <ping_pong_score_tracker_library.h>
-
-#define BLUE_BTN_PIN 3
-#define WHITE_BTN_PIN 2
 
 Button blue_btn(BLUE_BTN_PIN);
 Button white_btn(WHITE_BTN_PIN);
