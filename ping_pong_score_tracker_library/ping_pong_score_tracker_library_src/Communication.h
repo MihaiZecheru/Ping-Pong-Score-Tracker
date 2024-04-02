@@ -102,7 +102,7 @@ void on_blue_btn_hold()
 	DecrementBlueScore();
 	// When the user holds the button, after two seconds a point is deducted from blue but the score doesn't refresh until he lets go
 	// because of this, the user won't know when to let go of the button until the score display refreshes, hence why the display is refreshed here
-	DisplayScores(&score_display, blue_score, red_score);
+	DisplayScores(&score_display, blue_score, red_score); // TM1637 instance from main file
 }
 
 /**
@@ -137,9 +137,9 @@ void on_red_btn_hold()
 {
 	send_decrement_red_score_message();
 	DecrementRedScore();
-  // When the user holds the button, after two seconds a point is deducted from red but the score doesn't refresh until he lets go
-  // because of this, the user won't know when to let go of the button until the score display refreshes, hence why the display is refreshed here
-  DisplayScores(&score_display, blue_score, red_score);
+	// When the user holds the button, after two seconds a point is deducted from red but the score doesn't refresh until he lets go
+	// because of this, the user won't know when to let go of the button until the score display refreshes, hence why the display is refreshed here
+	DisplayScores(&score_display, blue_score, red_score); // TM1637 instance from main file
 }
 
 /**
@@ -170,12 +170,13 @@ void send_toggle_score_mode_message()
 /**
  * Perform the button action and send the message to the other device
  */
- void on_white_btn_hold()
+void on_white_btn_hold()
 {
 	send_start_new_game_message();
-	StartNewGame(&score_display); // TM1637 instance from main file
+	StartNewGame(); // TM1637 instance from main file
 	// When the user holds the button, after two seconds the scores will reset but the score doesn't refresh until he lets go
 	// because of this, the user won't know when to let go of the button until the score display refreshes, hence why the display is refreshed here
-}	DisplayScores(&score_display, blue_score, red_score);
+	DisplayScores(&score_display, 0, 0); // TM1637 instance from main file
+}
 
 #endif
