@@ -86,7 +86,7 @@ void ShowScoreMode(TM1637* _score_display)
       {
         // Show the number 21 in the middle of the score display
         _score_display->display(1, 2);
-      _score_display->display(2, 1);
+		_score_display->display(2, 1);
       }
     }
   }
@@ -94,9 +94,9 @@ void ShowScoreMode(TM1637* _score_display)
 }
 
 /**
- * Start a new game. Reset the scores. Show the current score mode.
+ * Start a new game. Reset the scores.
  */
-void StartNewGame(TM1637* _score_display)
+void StartNewGame()
 {
   blue_score = 0;
   red_score = 0;
@@ -191,7 +191,7 @@ void HandlePossibleWin(TM1637* _score_display)
 
   // Player has won
   BlinkScores(_score_display, 6);
-  StartNewGame(_score_display);
+  StartNewGame();
 }
 
 #endif

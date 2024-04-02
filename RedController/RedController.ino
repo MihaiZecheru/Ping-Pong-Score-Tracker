@@ -33,7 +33,7 @@ void loop()
     case DataMessage::increment_blue_score: IncrementBlueScore(); break;
     case DataMessage::decrement_blue_score: DecrementBlueScore(); break;
     case DataMessage::toggle_score_mode:   ToggleScoreMode(&score_display); break;
-    case DataMessage::start_new_game:      StartNewGame(&score_display); break;
+    case DataMessage::start_new_game:      StartNewGame(); break;
   };
 
   // Show the updated scores

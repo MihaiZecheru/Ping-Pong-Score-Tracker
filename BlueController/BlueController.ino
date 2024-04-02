@@ -2,8 +2,8 @@
 
 #define CLK 10
 #define DIO 9
-#define RED_BTN_PIN 7
-#define WHITE_BTN_PIN 5
+#define BLUE_BTN_PIN 8
+#define WHITE_BTN_PIN 2
 
 TM1637 score_display(CLK, DIO);
 
@@ -33,7 +33,7 @@ void loop()
     case DataMessage::increment_red_score: IncrementRedScore(); break;
     case DataMessage::decrement_red_score: DecrementRedScore(); break;
     case DataMessage::toggle_score_mode:   ToggleScoreMode(&score_display); break;
-    case DataMessage::start_new_game:      StartNewGame(&score_display); break;
+    case DataMessage::start_new_game:      StartNewGame(); break;
   };
 
   // Show the updated scores
