@@ -18,6 +18,12 @@ enum DataMessage
   toggle_score_mode = 101, // e
   start_new_game = 102, // f
   
+  hide_serve_indicator = 103, // g
+  show_serve_indicator = 104, // h
+  
+  server_chosen = 105, // i
+  starting_server_is_red = 106, // j
+  
   invalid_or_none = 0 // NUL
 };
 
@@ -34,6 +40,10 @@ DataMessage CharToDataMessage(char c)
     case 'd': return DataMessage::decrement_red_score;
     case 'e': return DataMessage::toggle_score_mode;
     case 'f': return DataMessage::start_new_game;
+	case 'g': return DataMessage::hide_serve_indicator;
+	case 'h': return DataMessage::show_serve_indicator;
+	case 'i': return DataMessage::server_chosen;
+	case 'j': return DataMessage::starting_server_is_red;
     default:  return DataMessage::invalid_or_none;
   }
 }
