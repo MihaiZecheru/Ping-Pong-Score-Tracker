@@ -53,7 +53,7 @@ char DataMessageToChar(DataMessage msg)
  */
 void TransmitData(DataMessage msg)
 {
-  Serial.write(DataMessageToChar(msg));
+  serial_com.write(DataMessageToChar(msg)); // serial_com instance from main controller file
 }
 
 /**
@@ -63,8 +63,8 @@ void TransmitData(DataMessage msg)
  */
 DataMessage ReceiveData()
 {
-  if (!Serial.available()) return DataMessage::invalid_or_none;
-  char transmission = Serial.read();
+  if (!serial_com.available()) return DataMessage::invalid_or_none; // serial_com instance from main controller file
+  char transmission = serial_com.read(); // serial_com instance from main controller file
   return CharToDataMessage(transmission);
 }
 

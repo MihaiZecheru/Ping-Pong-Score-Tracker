@@ -1,11 +1,16 @@
 #include <TM1637.h>
+#include <NeoSWSerial.h>
 
 #define CLK 10
 #define DIO 9
+#define RX 4
+#define TX 6
 #define BLUE_BTN_PIN 8
 #define WHITE_BTN_PIN 2
+#define LED_PIN 13
 
 TM1637 score_display(CLK, DIO);
+NeoSWSerial serial_com(RX, TX);
 
 //#include "Communication.h"
 //#include "Button.h"
@@ -17,9 +22,13 @@ Button white_btn(WHITE_BTN_PIN);
 
 void setup()
 {
+  // Intialize serial
+  pinMode(RX, INPUT);
+  pinMode(TX, OUTPUT);
+  serial_com.begin(9600);
+    
   // Initialize the score_display and set brightness to constant from ping_pong_score_tracker_library/ScoreDisplay.h
   InitScoreDisplay(&score_display);
-  Serial.begin(9600);
 
   // Show the players what they're playing to when they turn on their device
   ShowScoreMode(&score_display);
