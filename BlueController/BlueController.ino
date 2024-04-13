@@ -40,17 +40,15 @@ void loop()
   switch (ReceiveData())
   {
     case DataMessage::increment_red_score: IncrementRedScore(); break;
-    case DataMessage::decrement_red_score: DecrementRedScore(); break;
     case DataMessage::toggle_score_mode:   ToggleScoreMode(&score_display); break;
-    case DataMessage::start_new_game:      StartNewGame(); break;
   };
 
   // Show the updated scores
   DisplayScores(&score_display, blue_score, red_score);
 
-  // Listen for button presses and send events if they one of the buttons is pressed
-  blue_btn.CheckForPressOrHold(on_blue_btn_press, on_blue_btn_hold);
-  white_btn.CheckForPressOrHold(on_white_btn_press, on_white_btn_hold);
+  // Listen for button presses and call the given func if one of the buttons is pressed
+  blue_btn.CheckForPress(on_blue_btn_press);
+  white_btn.CheckForPress(on_white_btn_press);
 
   // If a player has won, blink the final score then start a new game
   HandlePossibleWin(&score_display);
