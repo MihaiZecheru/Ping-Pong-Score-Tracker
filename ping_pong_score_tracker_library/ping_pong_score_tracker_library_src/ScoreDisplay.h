@@ -4,9 +4,15 @@
 #include <TM1637.h>
 
 /**
-   The brightness of the score_display. Integer between 0 - 7
-*/
+ * The brightness of the score_display. Integer between 0 - 7
+ */
 #define SCORE_DISPLAY_BRIGHTNESS 5
+
+
+/**
+ * Byte for an empty spot in the score display. Turns all seven segments off
+ */
+#define EMPTY_DIGIT 0x7f
 
 /**
    Blue and Red players' scores
@@ -139,14 +145,39 @@ void DisplayScores(TM1637* _score_display, uint8_t _blue_score, uint8_t _red_sco
   /**
      If the score is 6, floor(6 / 10) is 0 (the first digit, i.e. the tens digit),
      and (6 % 10) is 6 (the second digit, i.e. the ones digit), giving "06"
+	 
+	 However, if there is a leading zero, it won't be displayed.
+	 So in this example, "6" will be displayed instead of "06"
   */
-  _score_display->display(0, floor(_blue_score / 10)); // Get the "ones" digit
-  _score_display->display(1, _blue_score % 10); // Get the "tens" digit
+  
+  // Show the "tens" digit, removing the leading zero if it exists
+  if (floor(_blue_score / 10) != 0)
+  {  
+	_score_display->display(0, floor(_blue_score / 10));
+  }
+  else
+  {
+    _score_display->display(0, EMPTY_DIGIT);
+  }
+  
+  // Show the "ones" digit
+  _score_display->display(1, _blue_score % 10);
 
-  _score_display->point(true); // Turn on the colon separator
+  // Turn on the colon separator
+  _score_display->point(true);
 
-  _score_display->display(2, floor(_red_score / 10)); // Get the "ones" digit
-  _score_display->display(3, _red_score % 10); // Get the "tens" digit
+  // Show the "tens" digit, removing the leading zero if it exists
+  if (floor(_red_score / 10) != 0)
+  {
+	_score_display->display(2, floor(_red_score / 10));
+  }
+  else
+  {
+	_score_display->display(2, EMPTY_DIGIT);
+  }
+
+  // Show the "ones" digit
+  _score_display->display(3, _red_score % 10);
 }
 
 /**
