@@ -3,8 +3,6 @@
 
 #include "ping_pong_score_tracker_library_src/Button.h"
 #include "ping_pong_score_tracker_library_src/Communication.h"
-#include "ping_pong_score_tracker_library_src/GameLog.h"
 #include "ping_pong_score_tracker_library_src/ScoreDisplay.h"
-#include "ping_pong_score_tracker_library_src/ServeIndicator.h"
 
 #endif
