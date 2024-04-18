@@ -3,8 +3,8 @@
 
 enum Player
 {
-	Blue = 1;
-	Red = 2;
+	Blue = 1,
+	Red = 2
 };
 
 #endif
