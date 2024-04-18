@@ -7,10 +7,11 @@
 #define TX 6
 #define BLUE_BTN_PIN 8
 #define WHITE_BTN_PIN 2
-#define LED_PIN 13
+#define SERVE_INDICATOR_PIN 13
 
 TM1637 score_display(CLK, DIO);
 NeoSWSerial serial_com(RX, TX);
+LED serve_indicator(SERVE_INDICATOR_PIN);
 
 //#include "Communication.h"
 //#include "Button.h"
@@ -20,14 +21,46 @@ NeoSWSerial serial_com(RX, TX);
 Button blue_btn(BLUE_BTN_PIN);
 Button white_btn(WHITE_BTN_PIN);
 
+/**
+ * Have the blue player select who goes first.
+ * He will press the blue button for himself,
+ * and the white button for his opponent.
+ * 
+ * Flash the serve indicator light while the blue player chooses.
+ */
+Player ChooseFirstServer()
+{
+  uint16_t last_time = millis();
+  while (true)
+  {
+    if (millis() - last_time > 250)
+    {
+      last_time = millis();
+      serve_indicator.Toggle();
+    }
+
+    if (blue_btn.GetState() == ButtonState::ON) return Player::Blue;
+    if (white_btn.GetState() == ButtonState::OFF) return Player::Red;
+  }
+}
+
+Player starting_server;
+
 void setup()
 {
   // Intialize serial
   pinMode(RX, INPUT);
   pinMode(TX, OUTPUT);
   serial_com.begin(9600);
-    
-  // Initialize the score_display and set brightness to constant from ping_pong_score_tracker_library/ScoreDisplay.h
+
+  // Have the blue player select who goes first
+  starting_server = ChooseFirstServer();
+
+  // Let the red player know who was chosen
+  if (starting_server == Player::Blue) TransmitData(DataMessage::blue_serves_first);
+  else TransmitData(DataMessage::red_serves_first);
+
+  // Initialize the score_display and set brightness to the constant from ping_pong_score_tracker_library/ScoreDisplay.h
   InitScoreDisplay(&score_display);
 
   // Show the players what they're playing to when they turn on their device
@@ -49,6 +82,11 @@ void loop()
   // Listen for button presses and call the given func if one of the buttons is pressed
   blue_btn.CheckForPress(on_blue_btn_press);
   white_btn.CheckForPress(on_white_btn_press);
+
+  // Check serve indicator
+  if (GetCurrentServer() == Player::Blue)
+       serve_indicator.Show();
+  else serve_indicator.Hide();
 
   // If a player has won, blink the final score then start a new game
   HandlePossibleWin(&score_display);
