@@ -37,11 +37,12 @@ Player GetCurrentServer(Player starting_server, Player other_server)
   // From ScoreIndicator.h
   int total_score = blue_score + red_score;
   
-  // The amount of times the server has changed is the amount of sets of 5 points in the total score
+  // The amount of times the server has changed is the amount of sets of 5 points that make up the total score
   int server_changes_count = floor(total_score / 5);
   
   // Get the current server
-  return server_changes_count % 2 == 1 ? starting_server : other_server;
+  // If the server has switched twice, it's back to the original server
+  return server_changes_count % 2 == 0 ? starting_server : other_server;
 }
 
 #endif
