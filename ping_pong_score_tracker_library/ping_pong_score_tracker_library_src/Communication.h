@@ -10,10 +10,12 @@
 enum DataMessage
 {
   increment_blue_score = 97, // a
-  
   increment_red_score = 98, // b
 
   toggle_score_mode = 99, // c
+  
+  red_serves_first = 100, // d
+  blue_serves_first = 101, // e
   
   invalid_or_none = 0 // NUL
 };
@@ -28,6 +30,8 @@ DataMessage CharToDataMessage(char c)
     case 'a': return DataMessage::increment_blue_score;
     case 'b': return DataMessage::increment_red_score;
     case 'c': return DataMessage::toggle_score_mode;
+	case 'd': return DataMessage::red_serves_first;
+	case 'e': return DataMessage::blue_serves_first;
     default:  return DataMessage::invalid_or_none;
   }
 }
