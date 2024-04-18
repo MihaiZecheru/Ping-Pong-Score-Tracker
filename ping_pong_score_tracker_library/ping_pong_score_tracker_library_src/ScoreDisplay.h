@@ -59,12 +59,13 @@ void DecrementRedScore()
 }
 
 /**
-   Whether the ping pong game is to be played to 11 or to 21
+   Whether the ping pong game is to be played to 6, to 11, or to 21
 */
 enum ScoreMode
 {
-  ToEleven = 1,
-  ToTwentyOne = 2
+  ToSix = 1
+  ToEleven = 2,
+  ToTwentyOne = 3
 };
 
 ScoreMode SCORE_MODE = ScoreMode::ToEleven; // Game to 11 is the default
@@ -82,13 +83,18 @@ void ShowScoreMode(TM1637* _score_display)
     while (millis() - start < 500)
     {
       // Show what the game is being played to in the middle of the score display
-      if (SCORE_MODE == ScoreMode::ToEleven)
+      if (SCORE_MODE == ScoreMode::ToSix)
+	  {
+		_score_display->display(1, 0);
+		_score_display->display(1, 6);
+	  }
+	  else if (SCORE_MODE == ScoreMode::ToEleven)
       {
         // Show the number 11 in the middle of the score display
         _score_display->display(1, 1);
         _score_display->display(2, 1);
       }
-      else
+      else if (SCORE_MODE == ScoreMode::ToTwentyOne)
       {
         // Show the number 21 in the middle of the score display
         _score_display->display(1, 2);
@@ -109,18 +115,24 @@ void StartNewGame()
 }
 
 /**
-   Toggle what score the game is played to, either to 11 or to 21
+  * Toggle what score the game is played to, either to 6, to 11, or to 21.
+  * 
+  * The order of ScoreMode's is to 11, to 21, then to 6.
 */
 void ToggleScoreMode(TM1637* _score_display)
 {
-  if (SCORE_MODE == ScoreMode::ToEleven)
+  if (SCORE_MODE == ScoreMode::ToSix)
+  {
+	SCORE_MODE = ScoreMode::ToEleven; // Game will now be played to 11, a 5pt extention from the ToSix game
+  }
+  else if (SCORE_MODE == ScoreMode::ToEleven)
   {
     SCORE_MODE = ScoreMode::ToTwentyOne; // Game will now be played to 21, a 10pt extension from the ToEleven game
   }
-  else if (SCORE_MODE == ScoreMode::ToTwentyOne && max(blue_score, red_score) < 11)
+  else if (SCORE_MODE == ScoreMode::ToTwentyOne && max(blue_score, red_score) < 6)
   {
-    // Check if any of the players have surpassed 11pts before switching to an 11pt game
-    SCORE_MODE = ScoreMode::ToEleven; // Game will now be played to 11, a 10pt reduction from the ToTwentyOne game
+    // Check if any of the players have surpassed 6pts before switching to an 11pt game
+    SCORE_MODE = ScoreMode::ToSix; // Game will now be played to 6, a 15pt reduction from the ToTwentyOne game
   }
 
   ShowScoreMode(_score_display);
@@ -188,8 +200,9 @@ bool HasWon(uint8_t player_score)
   // Check for deuce
   if (abs(blue_score - red_score) < 2) return false; // regardless of the score or what the game is being played to, neither player can win unless they're beating the other by two points
   
-  // Use >= because deuce makes it so that the score can go over 11 or over 21
-  if (SCORE_MODE == ScoreMode::ToEleven && player_score >= 11) return true;
+  // Use >= because deuce makes it so that the score can go over 6, over 11, or over 21
+  if (SCORE_MODE == ScoreMode::ToSix && player_score >= 6) return true;
+  else if (SCORE_MODE == ScoreMode::ToEleven && player_score >= 11) return true;
   else if (SCORE_MODE == ScoreMode::ToTwentyOne && player_score >= 21) return true;
   return false;
 }
