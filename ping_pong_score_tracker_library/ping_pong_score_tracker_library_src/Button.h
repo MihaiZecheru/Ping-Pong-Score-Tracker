@@ -12,7 +12,7 @@ class Button
 {
 private:
   const uint8_t pin;
-  const uint16_t last_press_time;
+  const uint64_t last_press_time;
 
 public:
   Button(const uint8_t pin) : pin(pin), last_press_time(millis())
