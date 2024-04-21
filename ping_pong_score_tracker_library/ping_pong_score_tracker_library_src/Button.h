@@ -29,7 +29,7 @@ public:
   }
 
   /**
-   * Check if the button is pressed, and then call the given on_press function. Includes 750ms debounce time.
+   * Check if the button is pressed, and then call the given on_press function. Includes 500ms debounce time.
    * 
    * Note:
    * 	- Call this function repeatedly in a forever loop, such as a while (true) loop, as the function returns after the button has been pressed.
@@ -48,8 +48,8 @@ public:
 	// Wait for the player to let go of the button
 	while (GetState() == ButtonState::ON) {};
 
-    // Button debouncing: make sure there's at least a 750ms time difference between the presses
-	if (millis() - last_press_time > 750)
+    // Button debouncing: make sure there's at least a 500ms time difference between the presses
+	if (millis() - last_press_time > 500)
 	{
 		last_press_time = millis();
 		on_press();
