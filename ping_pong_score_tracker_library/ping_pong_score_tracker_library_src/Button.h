@@ -12,9 +12,10 @@ class Button
 {
 private:
   const uint8_t pin;
+  const uint16_t last_press_time;
 
 public:
-  Button(const uint8_t pin) : pin(pin)
+  Button(const uint8_t pin) : pin(pin), last_press_time(millis())
   {
     pinMode(pin, INPUT);
   }
@@ -28,7 +29,7 @@ public:
   }
 
   /**
-   * Check if the button is pressed, and then call the given on_press function
+   * Check if the button is pressed, and then call the given on_press function. Includes 750ms debounce time.
    * 
    * Note:
    * 	- Call this function repeatedly in a forever loop, such as a while (true) loop, as the function returns after the button has been pressed.
@@ -40,15 +41,19 @@ public:
   {
     // Wait for a press
     if (GetState() != ButtonState::ON) return;
-    
+
     // Wait for the button to stop being pressed by waiting for GetState() to equal OFF
     // This means that the on_press func will be called only once the user releases the button
 	
-	// Wait for the player to let go of the button, otherwise the on_press function would get called immediately after
+	// Wait for the player to let go of the button
 	while (GetState() == ButtonState::ON) {};
 
-    // The button has been pressed but was not held for two seconds
-    on_press();
+    // Button debouncing: make sure there's at least a 750ms time difference between the presses
+	if (millis() - last_press_time > 750)
+	{
+		last_press_time = millis();
+		on_press();
+	}
   }
 };
 
