@@ -197,9 +197,15 @@ void DisplayScores(TM1637* _score_display, uint8_t _blue_score, uint8_t _red_sco
 */
 bool HasWon(uint8_t player_score)
 {
+  // Check for special win conditions
+  if (SCORE_MODE == ScoreMode::ToSix && max(blue_score, red_score) == 3 && min(blue_score, red_score) == 0) return true;
+  else if (SCORE_MODE == ScoreMode::ToEleven && max(blue_score, red_score) == 6 && min(blue_score, red_score) == 0) return true;
+  else if (SCORE_MODE == ScoreMode::ToTwentyOne && max(blue_score, red_score) == 9 && min(blue_score, red_score) == 0) return true;
+
   // Check for deuce
-  if (abs(blue_score - red_score) < 2) return false; // regardless of the score or what the game is being played to, neither player can win unless they're beating the other by two points
-  
+  // Regardless of the score or what the game is being played to, neither player can win unless they're beating the other by two points
+  if (abs(blue_score - red_score) < 2) return false;
+
   // Use >= because deuce makes it so that the score can go over 6, over 11, or over 21
   if (SCORE_MODE == ScoreMode::ToSix && player_score >= 6) return true;
   else if (SCORE_MODE == ScoreMode::ToEleven && player_score >= 11) return true;
