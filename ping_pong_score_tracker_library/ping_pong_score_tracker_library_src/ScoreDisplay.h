@@ -63,7 +63,7 @@ void DecrementRedScore()
 */
 enum ScoreMode
 {
-  ToSix = 1
+  ToSix = 1,
   ToEleven = 2,
   ToTwentyOne = 3
 };
@@ -75,20 +75,19 @@ void ShowScoreMode(TM1637* _score_display)
   _score_display->point(false); // turn semicolon off to completely clear display
   for (int i = 0; i < 6; i++)
   {
-    
     uint16_t start = millis();
     while (millis() - start < 125) _score_display->clearDisplay();
-    
+
     start = millis();
     while (millis() - start < 500)
     {
       // Show what the game is being played to in the middle of the score display
       if (SCORE_MODE == ScoreMode::ToSix)
-	  {
-		_score_display->display(1, 0);
-		_score_display->display(1, 6);
-	  }
-	  else if (SCORE_MODE == ScoreMode::ToEleven)
+      {
+	_score_display->display(1, 0);
+	_score_display->display(1, 6);
+      }
+      else if (SCORE_MODE == ScoreMode::ToEleven)
       {
         // Show the number 11 in the middle of the score display
         _score_display->display(1, 1);
@@ -98,7 +97,7 @@ void ShowScoreMode(TM1637* _score_display)
       {
         // Show the number 21 in the middle of the score display
         _score_display->display(1, 2);
-		_score_display->display(2, 1);
+	_score_display->display(2, 1);
       }
     }
   }
@@ -155,23 +154,23 @@ void InitScoreDisplay(TM1637* _score_display)
 void DisplayScores(TM1637* _score_display, uint8_t _blue_score, uint8_t _red_score)
 {
   /**
-     If the score is 6, floor(6 / 10) is 0 (the first digit, i.e. the tens digit),
-     and (6 % 10) is 6 (the second digit, i.e. the ones digit), giving "06"
-	 
-	 However, if there is a leading zero, it won't be displayed.
-	 So in this example, "6" will be displayed instead of "06"
+    * If the score is 6, floor(6 / 10) is 0 (the first digit, i.e. the tens digit),
+    * and (6 % 10) is 6 (the second digit, i.e. the ones digit), giving "06"
+    * 
+    * However, if there is a leading zero, it won't be displayed.
+    * So in this example, "6" will be displayed instead of "06"
   */
-  
+
   // Show the "tens" digit, removing the leading zero if it exists
   if (floor(_blue_score / 10) != 0)
-  {  
-	_score_display->display(0, floor(_blue_score / 10));
+  {
+    _score_display->display(0, floor(_blue_score / 10));
   }
   else
   {
     _score_display->display(0, EMPTY_DIGIT);
   }
-  
+
   // Show the "ones" digit
   _score_display->display(1, _blue_score % 10);
 
@@ -225,7 +224,7 @@ void BlinkScores(TM1637* _score_display, uint8_t blinks = 6)
     _score_display->point(false); // turn semicolon off to completely clear display
     uint16_t start = millis();
     while (millis() - start < 125) _score_display->clearDisplay();
-    
+
     start = millis();
     _score_display->point(true); // turn semicolon on again
     while (millis() - start < 500) DisplayScores(_score_display, blue_score, red_score);
