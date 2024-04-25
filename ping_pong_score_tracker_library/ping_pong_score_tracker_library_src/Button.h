@@ -12,7 +12,7 @@ class Button
 {
 private:
   const uint8_t pin;
-  const uint64_t last_press_time;
+  uint64_t last_press_time;
 
 public:
   Button(const uint8_t pin) : pin(pin), last_press_time(millis())
@@ -44,16 +44,16 @@ public:
 
     // Wait for the button to stop being pressed by waiting for GetState() to equal OFF
     // This means that the on_press func will be called only once the user releases the button
-	
-	// Wait for the player to let go of the button
-	while (GetState() == ButtonState::ON) {};
+
+    // Wait for the player to let go of the button
+    while (GetState() == ButtonState::ON) {};
 
     // Button debouncing: make sure there's at least a 500ms time difference between the presses
-	if (millis() - last_press_time > 500)
-	{
-		last_press_time = millis();
-		on_press();
-	}
+    if (millis() - last_press_time > 500)
+    {
+	last_press_time = millis();
+	on_press();
+    }
   }
 };
 
